@@ -50,6 +50,8 @@ group :development, :test do
 
   # testing framework to Ruby on Rails
   gem 'rspec-rails', '~> 6.1.0'
+
+  gem 'rubocop', '~> 1.64', require: false
 end
 
 group :development do
