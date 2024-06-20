@@ -12,78 +12,82 @@ RSpec.describe Robot do
     end
   end
 
-  describe '.place' do
-    context 'when the position is invalid' do
-      it 'does not place the robot on the board' do
-        expect { robot.place(axis_x: 6, axis_y: 6, face: 'NORTH') }
-          .to raise_error ArgumentError
+  describe '.process_command' do
+    context 'when the command is PLACE' do
+      context 'when the position is invalid' do
+        it 'does not place the robot on the board' do
+          expect { robot.process_command('PLACE 6,6,NORTH') }
+            .to raise_error ArgumentError
+        end
+      end
+
+      context 'when the position is valid' do
+        it 'places the robot on the valid position and orientation' do
+          robot.process_command('PLACE 1,2,NORTH')
+          expect(robot.instance_variable_get(:@axis_x)).to eq 1
+          expect(robot.instance_variable_get(:@axis_y)).to eq 2
+          expect(robot.instance_variable_get(:@face)).to eq 'NORTH'
+        end
       end
     end
 
-    it 'places the robot on the valid position and orientation' do
-      robot.place(axis_x: 1, axis_y: 2, face: 'NORTH')
-      expect(robot.instance_variable_get(:@axis_x)).to eq 1
-      expect(robot.instance_variable_get(:@axis_y)).to eq 2
-      expect(robot.instance_variable_get(:@face)).to eq 'NORTH'
-    end
-  end
+    context 'when the command is MOVE' do
+      context 'when the following moving position is invalid' do
+        it 'doesn\'t move the rebot' do
+          robot.process_command('PLACE 0,0,NORTH')
+          robot.process_command('MOVE')
 
-  describe '.move' do
-    context 'when the following moving position is invalid' do
-      it 'doesn\'t move the rebot' do
-        robot.place(axis_x: 0, axis_y: 0, face: 'NORTH')
+          expect(robot.instance_variable_get(:@axis_x)).to eq 0
+          expect(robot.instance_variable_get(:@axis_y)).to eq 0
+          expect(robot.instance_variable_get(:@face)).to eq 'NORTH'
+        end
+      end
 
-        robot.move
-        expect(robot.instance_variable_get(:@axis_x)).to eq 0
-        expect(robot.instance_variable_get(:@axis_y)).to eq 0
-        expect(robot.instance_variable_get(:@face)).to eq 'NORTH'
+      context 'when the following moving position is valid' do
+        it 'moves the robot' do
+          robot.process_command('PLACE 0,0,SOUTH')
+          robot.process_command('MOVE')
+
+          expect(robot.instance_variable_get(:@axis_x)).to eq 0
+          expect(robot.instance_variable_get(:@axis_y)).to eq 1
+          expect(robot.instance_variable_get(:@face)).to eq 'SOUTH'
+        end
       end
     end
 
-    context 'when the following moving position is valid' do
-      it 'moves the robot' do
-        robot.place(axis_x: 0, axis_y: 0, face: 'SOUTH')
+    context 'when the command is LEFT' do
+      it 'changes the robot\'s direction to the left' do
+        robot.process_command('PLACE 0,0,NORTH')
 
-        robot.move
-        expect(robot.instance_variable_get(:@axis_x)).to eq 0
-        expect(robot.instance_variable_get(:@axis_y)).to eq 1
+        robot.process_command('LEFT')
+        expect(robot.instance_variable_get(:@face)).to eq 'WEST'
+        robot.process_command('LEFT')
         expect(robot.instance_variable_get(:@face)).to eq 'SOUTH'
+        robot.process_command('LEFT')
+        expect(robot.instance_variable_get(:@face)).to eq 'EAST'
       end
     end
-  end
 
-  describe '.left' do
-    it 'changes the robot\'s direction to the left' do
-      robot.place(axis_x: 0, axis_y: 0, face: 'NORTH')
+    context 'when the command is RIGHT' do
+      it 'changes the robot\'s direction to the right' do
+        robot.process_command('PLACE 0,0,NORTH')
 
-      robot.left
-      expect(robot.instance_variable_get(:@face)).to eq 'WEST'
-      robot.left
-      expect(robot.instance_variable_get(:@face)).to eq 'SOUTH'
-      robot.left
-      expect(robot.instance_variable_get(:@face)).to eq 'EAST'
+        robot.process_command('RIGHT')
+        expect(robot.instance_variable_get(:@face)).to eq 'EAST'
+        robot.process_command('RIGHT')
+        expect(robot.instance_variable_get(:@face)).to eq 'SOUTH'
+        robot.process_command('RIGHT')
+        expect(robot.instance_variable_get(:@face)).to eq 'WEST'
+      end
     end
-  end
 
-  describe '.right' do
-    it 'changes the robot\'s direction to the left' do
-      robot.place(axis_x: 0, axis_y: 0, face: 'NORTH')
+    context 'when the command is REPORT' do
+      it 'outputs the current position and direction of the robot' do
+        robot.process_command('PLACE 1,1,SOUTH')
 
-      robot.right
-      expect(robot.instance_variable_get(:@face)).to eq 'EAST'
-      robot.right
-      expect(robot.instance_variable_get(:@face)).to eq 'SOUTH'
-      robot.right
-      expect(robot.instance_variable_get(:@face)).to eq 'WEST'
-    end
-  end
-
-  describe '#report' do
-    it 'outputs the current position and direction of the robot' do
-      robot.place(axis_x: 1, axis_y: 1, face: 'SOUTH')
-
-      expect { robot.report }
-        .to output("1,1,SOUTH\n").to_stdout
+        expect { robot.process_command('REPORT') }
+          .to output("1,1,SOUTH\n").to_stdout
+      end
     end
   end
 end

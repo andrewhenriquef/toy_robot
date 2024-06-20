@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'debug'
 
 class Robot
@@ -12,6 +13,23 @@ class Robot
   def initialize(board)
     @board = board
   end
+
+  def process_command(command)
+    case command.chomp
+    when 'MOVE' then move
+    when 'LEFT' then left
+    when 'RIGHT' then right
+    when 'REPORT' then report
+    when /PLACE (\d),(\d),(.+)/
+      place(
+        axis_x: Regexp.last_match(1).to_i,
+        axis_y: Regexp.last_match(2).to_i,
+        face: Regexp.last_match(3)
+      )
+    end
+  end
+
+  private
 
   def place(axis_x:, axis_y:, face:)
     raise ArgumentError unless @board.valid_position?(axis_x, axis_y)
