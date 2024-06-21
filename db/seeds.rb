@@ -7,3 +7,7 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+
+board = Board.create!(width: 5, height: 5)
+Robot.create!(axis_x: 0, axis_y: 0, face: 'NORTH', board: board)
