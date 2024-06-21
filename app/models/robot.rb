@@ -1,18 +1,18 @@
-# frozen_string_literal: true
+class Robot < ApplicationRecord
+  belongs_to :board
 
-require 'debug'
+  broadcasts_to ->(robot) { :robots }
 
-class Robot
+  after_update_commit { update_broadcast }
+
+  validates :axis_x, :axis_y, :face, presence: true
+
   FACE_RULES = {
     'NORTH' => { 'RIGHT' => 'EAST', 'LEFT' => 'WEST' },
     'EAST' => { 'RIGHT' => 'SOUTH', 'LEFT' => 'NORTH' },
     'SOUTH' => { 'RIGHT' => 'WEST', 'LEFT' => 'EAST' },
     'WEST' => { 'RIGHT' => 'NORTH', 'LEFT' => 'SOUTH' }
   }.freeze
-
-  def initialize(board)
-    @board = board
-  end
 
   def process_command(command)
     case command.chomp
@@ -32,35 +32,41 @@ class Robot
   private
 
   def place(axis_x:, axis_y:, face:)
-    raise ArgumentError unless @board.valid_position?(axis_x, axis_y)
+    raise ArgumentError unless board.valid_position?(axis_x, axis_y)
 
-    @axis_x = axis_x
-    @axis_y = axis_y
-    @face = face
+    self.axis_x = axis_x
+    self.axis_y = axis_y
+    self.face = face
   end
 
   def move
-    case @face
+    case face
     when 'NORTH'
-      @axis_y -= 1 if @board.valid_position?(@axis_x, @axis_y - 1)
+      self.axis_y -= 1 if board.valid_position?(axis_x, axis_y - 1)
     when 'EAST'
-      @axis_x += 1 if @board.valid_position?(@axis_x + 1, @axis_y)
+      self.axis_x += 1 if board.valid_position?(axis_x + 1, axis_y)
     when 'SOUTH'
-      @axis_y += 1 if @board.valid_position?(@axis_x, @axis_y + 1)
+      self.axis_y += 1 if board.valid_position?(axis_x, axis_y + 1)
     when 'WEST'
-      @axis_x -= 1 if @board.valid_position?(@axis_x - 1, @axis_y)
+      self.axis_x -= 1 if board.valid_position?(axis_x - 1, axis_y)
     end
   end
 
   def left
-    @face = FACE_RULES[@face]['LEFT']
+    self.face = FACE_RULES[face]['LEFT']
   end
 
   def right
-    @face = FACE_RULES[@face]['RIGHT']
+    self.face = FACE_RULES[face]['RIGHT']
   end
 
   def report
-    puts "#{@axis_x},#{@axis_y},#{@face}"
+    puts "#{axis_x},#{axis_y},#{face}"
+  end
+
+  def update_broadcast
+    broadcast_replace_to :robots,
+                         partial: 'robots/robot',
+                         locals: { robot: self }
   end
 end
