@@ -2,3 +2,5 @@
 
 require_relative "../config/application"
 require "importmap/commands"
+
+pin "controllers/robot", to: "controllers/robot.js"
