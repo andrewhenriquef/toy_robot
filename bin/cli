@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require_relative '../config/environment'
 require './app/models/board'
 require './app/models/robot'
 
+robot = Robot.includes(:board).first
 
 # check for a file input
 if ARGV[0] && (ARGV[0] == '-f' || ARGV[0] == '--file')
   if ARGV[1]
     if File.exist?(ARGV[1])
-      board = Board.new
-      robot = Robot.new(board)
       found_first_place = false
 
       File.open(ARGV[1]).each do |line|
@@ -19,6 +19,7 @@ if ARGV[0] && (ARGV[0] == '-f' || ARGV[0] == '--file')
         next if found_first_place == false
 
         robot.process_command(line)
+        robot.save!
       end
     else
       puts 'File not found'
@@ -34,11 +35,10 @@ else
     command = gets
   end
 
-  board = Board.new
-  robot = Robot.new(board)
-
   while command != 'EXIT'
     robot.process_command(command)
+    robot.save!
+
     command = gets
   end
 end
