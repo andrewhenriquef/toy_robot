@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative '../config/environment'
+
+robot = Robot.first
+
+# check for a file input
+if ARGV[0] && (ARGV[0] == '-f' || ARGV[0] == '--file')
+  if ARGV[1]
+    if File.exist?(ARGV[1])
+      found_first_place = false
+
+      File.open(ARGV[1]).each do |line|
+        found_first_place = true if line.start_with?('PLACE')
+
+        next if found_first_place == false
+
+        robot.process_command(line)
+        robot.save!
+      end
+    else
+      puts 'File not found'
+    end
+  else
+    puts 'File path is missing. Please provide a file path to read the commands from.'
+  end
+else
+  # STDIN input
+  command = nil
+
+  while command.nil? || !command&.start_with?('PLACE')
+    command = gets
+  end
+
+  while command != 'EXIT'
+    robot.process_command(command)
+    robot.save!
+
+    command = gets
+  end
+end
