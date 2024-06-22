@@ -51,6 +51,12 @@ group :development, :test do
   # testing framework to Ruby on Rails
   gem 'rspec-rails', '~> 6.1.0'
 
+  # fixtures replacement with a straightforward definition syntax
+  gem 'factory_bot_rails', '~> 6.4.3'
+
+  # Shoulda Matchers provides RSpec one-liners to test common Rails functionality
+  gem 'shoulda-matchers', '~> 6.2'
+
   gem 'rubocop', '~> 1.64', require: false
 end
 
