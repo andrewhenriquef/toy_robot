@@ -1,0 +1,31 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 250px;
+  height: 250px;
+
+  .square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    position: relative;
+
+    &.dark { background-color: #2f402a; }
+    &.light { background-color: #cdcdc4; }
+
+    .robot {
+      width: 75px;
+      height: 75px;
+      background-image: url('/robot.png');
+      background-size: cover;
+      position: absolute;
+
+      &.SOUTH { transform: rotate(0deg); }
+      &.WEST { transform: rotate(90deg); }
+      &.NORTH { transform: rotate(180deg); }
+      &.EAST { transform: rotate(270deg); }
+    }
+  }
+}
