@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resource :robots, only: [:update]
+
   get 'robots/index'
   get 'board/index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

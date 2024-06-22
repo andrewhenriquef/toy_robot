@@ -1,4 +1,10 @@
 <%= turbo_stream_from :robots %>
 
-<%= render @robot %>
+<%= form_with(url: robots_path, method: :put) do |f| %>
+  <%= hidden_field_tag :id, @robot.id %>
+  <%= text_field_tag :command, nil, placeholder: "PLACE 0,0,SOUTH" %>
 
+  <%= f.submit "Update" %>
+<% end %>
+
+<%= render @robot %>
