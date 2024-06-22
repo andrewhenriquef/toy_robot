@@ -1,3 +1,4 @@
+require 'rails_helper'
 require 'open3'
 
 RSpec.describe 'cli' do
@@ -22,6 +23,19 @@ RSpec.describe 'cli' do
     context 'when the file is provided' do
       it 'outputs the file report to stdout' do
         stdout, = Open3.capture3('bin/cli -f spec/fixtures/sample_a')
+
+        expect(stdout.chomp).to eq('0,1,SOUTH')
+      end
+    end
+  end
+
+  describe 'interactive input' do
+    context 'when the input is valid' do
+      it 'outputs the report to stdout' do
+        stdout, = Open3.capture3(
+          'bin/cli',
+          stdin_data: "PLACE 0,0,SOUTH\nMOVE\nREPORT\n"
+        )
 
         expect(stdout.chomp).to eq('0,1,SOUTH')
       end

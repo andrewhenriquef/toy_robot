@@ -1,4 +1,4 @@
-require './app/models/board'
+require 'rails_helper'
 
 RSpec.describe Board do
   subject(:board) { Board.new(width: 5, height: 5) }

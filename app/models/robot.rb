@@ -5,7 +5,7 @@ class Robot < ApplicationRecord
 
   after_update_commit { update_broadcast }
 
-  validates :axis_x, :axis_y, :face, presence: true
+  validates :axis_x, :axis_y, :face, :board, presence: true
 
   FACE_RULES = {
     'NORTH' => { 'RIGHT' => 'EAST', 'LEFT' => 'WEST' },
