@@ -2,8 +2,8 @@ class RobotsController < ApplicationController
   def update
     robot = Robot.find(allowed_params[:id])
 
-    robot.process_command(allowed_params[:command])
-    robot.save!
+    service = RobotCommandService.new(robot)
+    service.execute(allowed_params[:command])
 
     render json: robot
   end

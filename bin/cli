@@ -16,8 +16,8 @@ if ARGV[0] && (ARGV[0] == '-f' || ARGV[0] == '--file')
 
         next if found_first_place == false
 
-        robot.process_command(line)
-        robot.save!
+        service = RobotCommandService.new(robot)
+        service.execute(line)
       end
     else
       puts 'File not found'
@@ -34,8 +34,8 @@ else
   end
 
   while command != 'EXIT'
-    robot.process_command(command)
-    robot.save!
+    service = RobotCommandService.new(robot)
+    service.execute(command)
 
     command = gets
   end
