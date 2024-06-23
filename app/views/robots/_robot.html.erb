@@ -1,12 +1,10 @@
 <%= turbo_frame_tag(robot) do %>
   <div class="board">
-    <% 5.times do |row| %>
-      <% 5.times do |col| %>
-        <div class="square <%= robot.face %> <%= (row + col).even? ? 'light' : 'dark' %>"
+    <% robot.board.width.times do |row| %>
+      <% robot.board.height.times do |col| %>
+        <div class="square <%= robot.face %> <%= BoardHelper.square_color(row, col) %>"
             id="square_<%= row %>_<%= col %>">
-            <% if row == robot.axis_y && col == robot.axis_x %>
-              <div class="robot <%= robot.face %>"></div>
-            <% end %>
+           <%= render_robot_if_present(robot, row, col) %>
         </div>
       <% end %>
     <% end %>

@@ -1,6 +1,5 @@
 class BoardController < ApplicationController
   def index
-    @robot = Robot.first
-    @board = @robot.board
+    @robot = Robot.includes(:board).first
   end
 end
