@@ -1,7 +1,7 @@
 class Robot < ApplicationRecord
   belongs_to :board
 
-  broadcasts_to ->(robot) { :robots }
+  broadcasts_to ->(_robot) { :robots }
 
   after_update_commit { update_broadcast }
 
@@ -23,12 +23,7 @@ class Robot < ApplicationRecord
   end
 
   def move
-    case face
-    when 'NORTH' then move_to_north
-    when 'EAST' then move_to_east
-    when 'SOUTH' then move_to_south
-    when 'WEST' then move_to_west
-    end
+    send("move_to_#{face.downcase}")
   end
 
   def turn_left
@@ -46,19 +41,26 @@ class Robot < ApplicationRecord
   private
 
   def move_to_north
-    self.axis_y -= 1 if board.valid_position?(axis_x, axis_y - 1)
+    update_to_new_position(axis_y: axis_y - 1)
   end
 
   def move_to_east
-    self.axis_x += 1 if board.valid_position?(axis_x + 1, axis_y)
+    update_to_new_position(axis_x: axis_x + 1)
   end
 
   def move_to_south
-    self.axis_y += 1 if board.valid_position?(axis_x, axis_y + 1)
+    update_to_new_position(axis_y: axis_y + 1)
   end
 
   def move_to_west
-    self.axis_x -= 1 if board.valid_position?(axis_x - 1, axis_y)
+    update_to_new_position(axis_x: axis_x - 1)
+  end
+
+  def update_to_new_position(axis_x: self.axis_x, axis_y: self.axis_y)
+    return unless board.valid_position?(axis_x, axis_y)
+
+    self.axis_x = axis_x
+    self.axis_y = axis_y
   end
 
   def update_broadcast

@@ -4,7 +4,9 @@ class RobotCommandService
   end
 
   def execute(command)
-    case command.chomp
+    sanitized_command = command.chomp.strip.upcase
+
+    case sanitized_command
     when 'MOVE' then @robot.move
     when 'LEFT' then @robot.turn_left
     when 'RIGHT' then @robot.turn_right
