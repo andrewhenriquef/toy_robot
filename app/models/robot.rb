@@ -14,23 +14,6 @@ class Robot < ApplicationRecord
     'WEST' => { 'RIGHT' => 'NORTH', 'LEFT' => 'SOUTH' }
   }.freeze
 
-  def process_command(command)
-    case command.chomp
-    when 'MOVE' then move
-    when 'LEFT' then left
-    when 'RIGHT' then right
-    when 'REPORT' then report
-    when /PLACE (\d),(\d),(.+)/
-      place(
-        axis_x: Regexp.last_match(1).to_i,
-        axis_y: Regexp.last_match(2).to_i,
-        face: Regexp.last_match(3)
-      )
-    end
-  end
-
-  private
-
   def place(axis_x:, axis_y:, face:)
     raise ArgumentError unless board.valid_position?(axis_x, axis_y)
 
@@ -41,27 +24,41 @@ class Robot < ApplicationRecord
 
   def move
     case face
-    when 'NORTH'
-      self.axis_y -= 1 if board.valid_position?(axis_x, axis_y - 1)
-    when 'EAST'
-      self.axis_x += 1 if board.valid_position?(axis_x + 1, axis_y)
-    when 'SOUTH'
-      self.axis_y += 1 if board.valid_position?(axis_x, axis_y + 1)
-    when 'WEST'
-      self.axis_x -= 1 if board.valid_position?(axis_x - 1, axis_y)
+    when 'NORTH' then move_to_north
+    when 'EAST' then move_to_east
+    when 'SOUTH' then move_to_south
+    when 'WEST' then move_to_west
     end
   end
 
-  def left
+  def turn_left
     self.face = FACE_RULES[face]['LEFT']
   end
 
-  def right
+  def turn_right
     self.face = FACE_RULES[face]['RIGHT']
   end
 
   def report
     puts "#{axis_x},#{axis_y},#{face}"
+  end
+
+  private
+
+  def move_to_north
+    self.axis_y -= 1 if board.valid_position?(axis_x, axis_y - 1)
+  end
+
+  def move_to_east
+    self.axis_x += 1 if board.valid_position?(axis_x + 1, axis_y)
+  end
+
+  def move_to_south
+    self.axis_y += 1 if board.valid_position?(axis_x, axis_y + 1)
+  end
+
+  def move_to_west
+    self.axis_x -= 1 if board.valid_position?(axis_x - 1, axis_y)
   end
 
   def update_broadcast
