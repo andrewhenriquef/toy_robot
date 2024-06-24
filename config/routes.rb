@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resource :robots, only: [:update]
+  resource :robots, only: [:update] do
+    post :upload_file, on: :collection
+  end
 
   get 'robots/index'
   get 'board/index'
