@@ -1,104 +1,82 @@
 # Toy Robot Simulator
 
-## Table of contents:
+You can read more about the challenge through the link below:
 
-* [Description](./README.md#description)
-  * [Constraints](./README.md#constraints)
-  * [Example Input and Output](./README.md#example-input-and-output)
-  * [Deliverables](./README.md#deliverables)
+[coding challenge link](https://github.com/pin-people/toy_robot)
 
-## Description
+# How to run this code
 
-* The application is a simulation of a toy robot moving on a square tabletop, of dimensions 5x5. Having a CLI option and also a web version.
+## Setup project
 
-* There are no other obstructions on the table surface.
+### Prerequisites
 
-* The robot is free to roam around the surface of the table, but must be prevented from falling to destruction. Any movement that would result in the robot falling from the table must be prevented, however further valid movement commands must still be allowed.
+- Install ruby 3.3.3, sqlite3 and redis
 
-Create an application that can read in commands of the following form:
 
-### Command Line Interface (CLI)
+### Install Project Libraries
+
+Run the following command to install the necessary libraries:
 
 ```
-PLACE X,Y,F
-MOVE
-LEFT
-RIGHT
-REPORT
+bundle install
 ```
 
-* `PLACE` will put the toy robot on the table in position X,Y and facing NORTH, SOUTH, EAST or WEST.
+### Setup Project Database
 
-* The origin (0,0) can be considered to be the NORTH WEST most corner.
+Create and set up the database by running:
 
-* The first valid command to the robot is a `PLACE` command, after that, any sequence of commands may be issued, in any order, including another `PLACE` command. The application should discard all commands in the sequence until a valid `PLACE` command has been executed
 
-* `MOVE` will move the toy robot one unit forward in the direction it is currently facing.
 
-* `LEFT` and `RIGHT` will rotate the robot 90 degrees in the specified direction without changing the position of the robot.
+```
+rails db:create db:migrate db:seed
+```
 
-* `REPORT` will announce the X,Y and F of the robot. This can be in any form, but standard output is sufficient.
+### Run Project Test Suite
 
-* A robot that is not on the table can choose to ignore the `MOVE`, `LEFT`, `RIGHT` and `REPORT` commands.
+Execute the project's test suite with:
 
-* Inputs could be from a file or STDIN, as the developer chooses.
 
-* Provide test data to exercise the application.
+```
+rspec spec/
+```
 
-### WEB
+### Run Web Application
 
-You have to create a simple (no complex layout needed) web application, showing the table and the position and direction of the robot on the table (if robot already placed on table). All commands must update robot position, in other words, the command's output should be visible on the table, invalidating the necessity of the `REPORT` command.
+Start the Rails server:
 
-You are free to decide how to receive commands, being it in batches or individually, but the commands must be "processed" individually. Meaning all commands must update the robot position on the table in a way the user can understand the path the robot is following.
+```
+rails server
+```
 
-* All commands (except `REPORT` which is unnecessary for the Web Version) should work exactly as on the CLI.
+Access the http://localhost:3000 on your browser
 
-### Constraints
+### Run CLI Application
 
-* The toy robot must not fall off the table during movement. This also includes the initial placement of the toy robot.
+To start the CLI:
 
-* Any move that would cause the robot to fall must be ignored.
+```
+bin/cli
+```
 
-### Example Input and Output:
+To read commands from a file in CLI mode:
 
-#### Example a
+```
+bin/cli -f spec/fixtures/sample_a
+```
 
-    PLACE 0,0,SOUTH
-    MOVE
-    REPORT
+## Considerations
+### Current Integrations
 
-Expected output:
+- This application integrates a web app with the CLI. It uses Turbo from Hotwire to synchronize commands directly between the CLI and the web app in both directions.
 
-    0,1,SOUTH
+### Known Issues
 
-#### Example b
+- In the web version, the robot starts in a "placed" state. This behavior is an issue that needs to be addressed. Limited progress was made this week due to personal commitments.
 
-    PLACE 0,0,SOUTH
-    LEFT
-    REPORT
-
-Expected output:
-
-    0,0,EAST
-
-#### Example c
-
-    PLACE 1,2,EAST
-    MOVE
-    MOVE
-    RIGHT
-    MOVE
-    REPORT
-
-Expected output
-
-    3,3,SOUTH
-
-### Deliverables
-
-Please provide your source code, and any test code/data you used to
-build your solution.
-
-Please engineer your solution to a standard you consider suitable for
-production. It is not required to provide any graphical output showing the
-movement of the toy robot on the CLI, only on the web.
+### Future Improvements
+- Resolve the placement issue in the web version.
+- Refactor the code to unify the "place" command across the app.
+- Enable synchronous updates of the robot's position in both the web and CLI versions to enhance interaction.
+- Develop a Docker file to facilitate rapid project setup.
+- Introduce multiple "tabletops" and robots to allow gameplay on the same or different surfaces.
+- Create a friendly interface

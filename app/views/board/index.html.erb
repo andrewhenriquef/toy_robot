@@ -1,4 +1,18 @@
 <%= turbo_stream_from :robots %>
 
-<%= render @robot %>
+<%= form_with(url: robots_path, method: :put) do |f| %>
+  <%= hidden_field_tag :id, @robot.id %>
+  <%= text_field_tag :command, nil, placeholder: "PLACE 0,0,SOUTH" %>
 
+  <%= f.submit "Update" %>
+<% end %>
+
+<%= form_with(url: upload_file_robots_path, method: :post, html: { multipart: true }) do |f| %>
+  <%= hidden_field_tag :id, @robot.id %>
+  <%= file_field_tag :file %>
+  <%= f.submit "Upload File" %>
+<% end %>
+
+<%= turbo_frame_tag(@robot) do %>
+  <%= render @robot %>
+<% end %>

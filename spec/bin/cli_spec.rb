@@ -2,6 +2,10 @@ require 'rails_helper'
 require 'open3'
 
 RSpec.describe 'cli' do
+  before :all do
+    create(:robot)
+  end
+
   describe 'file input' do
     context 'when the file is not provided' do
       it 'outputs File not found to stdout' do
@@ -23,7 +27,6 @@ RSpec.describe 'cli' do
     context 'when the file is provided' do
       it 'outputs the file report to stdout' do
         stdout, = Open3.capture3('bin/cli -f spec/fixtures/sample_a')
-
         expect(stdout.chomp).to eq('0,1,SOUTH')
       end
     end

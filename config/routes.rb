@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resource :robots, only: [:update] do
+    post :upload_file, on: :collection
+  end
+
   get 'robots/index'
   get 'board/index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
