@@ -43,5 +43,16 @@ RSpec.describe 'cli' do
         expect(stdout.chomp).to eq('0,1,SOUTH')
       end
     end
+
+    context 'when the input is EXIT' do
+      it 'outputs the report to stdout' do
+        stdout, = Open3.capture3(
+          'bin/cli',
+          stdin_data: 'EXIT'
+        )
+
+        expect(stdout.chomp).to eq('')
+      end
+    end
   end
 end

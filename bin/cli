@@ -9,13 +9,7 @@ robot = Robot.first
 if ARGV[0] && (ARGV[0] == '-f' || ARGV[0] == '--file')
   if ARGV[1]
     if File.exist?(ARGV[1])
-      found_first_place = false
-
       File.open(ARGV[1]).each do |line|
-        found_first_place = true if line.start_with?('PLACE')
-
-        next if found_first_place == false
-
         service = RobotCommandService.new(robot)
         service.execute(line)
       end
@@ -29,14 +23,12 @@ else
   # STDIN input
   command = nil
 
-  while command.nil? || !command&.start_with?('PLACE')
+  loop do
     command = gets
-  end
 
-  while command != 'EXIT'
+    break if command.match?(/EXIT/i)
+
     service = RobotCommandService.new(robot)
     service.execute(command)
-
-    command = gets
   end
 end
