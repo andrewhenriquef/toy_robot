@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: boards
+#
+#  id         :integer          not null, primary key
+#  height     :integer
+#  started    :boolean          default(FALSE), not null
+#  width      :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe Board do
