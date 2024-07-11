@@ -41,6 +41,7 @@ class Robot < ApplicationRecord
     self.axis_x = axis_x
     self.axis_y = axis_y
     self.face = face
+    self.placed = true
   end
 
   def move
@@ -57,6 +58,10 @@ class Robot < ApplicationRecord
 
   def report
     puts "#{axis_x},#{axis_y},#{face}"
+  end
+
+  def unplaced?
+    !placed?
   end
 
   private
