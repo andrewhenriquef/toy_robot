@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: robots
+#
+#  id         :integer          not null, primary key
+#  axis_x     :integer
+#  axis_y     :integer
+#  face       :string
+#  placed     :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  board_id   :integer          not null
+#
+# Indexes
+#
+#  index_robots_on_board_id  (board_id)
+#
+# Foreign Keys
+#
+#  board_id  (board_id => boards.id)
+#
 class Robot < ApplicationRecord
   belongs_to :board
 
