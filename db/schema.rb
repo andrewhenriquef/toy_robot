@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_21_004453) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_11_000011) do
   create_table "boards", force: :cascade do |t|
     t.integer "width"
     t.integer "height"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "started", default: false, null: false
   end
 
   create_table "robots", force: :cascade do |t|
@@ -25,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_004453) do
     t.integer "board_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "placed", default: false, null: false
     t.index ["board_id"], name: "index_robots_on_board_id"
   end
 
