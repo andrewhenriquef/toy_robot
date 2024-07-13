@@ -3,7 +3,7 @@ class Robot < ApplicationRecord
 
   broadcasts_to ->(_robot) { :robots }
 
-  after_update_commit { update_broadcast }
+  after_update_commit { update_broadcast_board }
 
   validates :axis_x, :axis_y, :face, :board, presence: true
 
@@ -63,9 +63,10 @@ class Robot < ApplicationRecord
     self.axis_y = axis_y
   end
 
-  def update_broadcast
-    broadcast_replace_to :robots,
-                         partial: 'robots/robot',
-                         locals: { robot: self }
+  def update_broadcast_board
+    broadcast_replace_to board,
+                         target: "board_#{board.id}",
+                         partial: 'boards/board',
+                         locals: { board:, robot: self }
   end
 end
