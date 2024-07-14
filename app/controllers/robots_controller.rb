@@ -28,7 +28,7 @@ class RobotsController < ApplicationController
   private
 
   def robot
-    @robot ||= Robot.find(allowed_params[:id])
+    @robot ||= Robot.includes(:board).find(allowed_params[:id])
   end
 
   def allowed_params

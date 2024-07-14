@@ -3,13 +3,12 @@
 
 require_relative '../config/environment'
 
-robot = Robot.first
-
 # check for a file input
 if ARGV[0] && (ARGV[0] == '-f' || ARGV[0] == '--file')
   if ARGV[1]
     if File.exist?(ARGV[1])
       File.open(ARGV[1]).each do |line|
+        robot = Robot.includes(:board).first
         service = RobotCommandService.new(robot)
         service.execute(line)
       end
@@ -28,6 +27,7 @@ else
 
     break if command.match?(/EXIT/i)
 
+    robot = Robot.includes(:board).first
     service = RobotCommandService.new(robot)
     service.execute(command)
   end
