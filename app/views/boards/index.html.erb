@@ -1,4 +1,4 @@
-<%= turbo_stream_from :robots %>
+<%= turbo_stream_from @board %>
 
 <%= form_with(url: robots_path, method: :put) do |f| %>
   <%= hidden_field_tag :id, @robot.id %>
@@ -13,6 +13,4 @@
   <%= f.submit "Upload File" %>
 <% end %>
 
-<%= turbo_frame_tag(@robot) do %>
-  <%= render @robot %>
-<% end %>
+<%= render @board, robot: @board.robot %>
