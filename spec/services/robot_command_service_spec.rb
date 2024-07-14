@@ -44,30 +44,38 @@ RSpec.describe RobotCommandService do
         it { expect { service.execute('MOVE') }.to(change(robot, :axis_y).from(0).to(1)) }
         it { expect { service.execute('MOVE') }.not_to(change(robot, :face)) }
       end
+    end
 
-      context 'when the command is LEFT' do
-        before do
-          service.execute('PLACE 0,0,NORTH')
-        end
-
-        it 'changes the robot\'s direction to the left' do
-          expect { service.execute('LEFT') }.to(change(robot, :face).from('NORTH').to('WEST'))
-          expect { service.execute('LEFT') }.to(change(robot, :face).from('WEST').to('SOUTH'))
-          expect { service.execute('LEFT') }.to(change(robot, :face).from('SOUTH').to('EAST'))
-        end
+    context 'when the command is LEFT' do
+      before do
+        service.execute('PLACE 0,0,NORTH')
       end
 
-      context 'when the command is RIGHT' do
-        before do
-          service.execute('PLACE 0,0,NORTH')
-        end
-
-        it 'changes the robot\'s direction to the right' do
-          expect { service.execute('RIGHT') }.to(change(robot, :face).from('NORTH').to('EAST'))
-          expect { service.execute('RIGHT') }.to(change(robot, :face).from('EAST').to('SOUTH'))
-          expect { service.execute('RIGHT') }.to(change(robot, :face).from('SOUTH').to('WEST'))
-        end
+      it 'changes the robot\'s direction to the left' do
+        expect { service.execute('LEFT') }.to(change(robot, :face).from('NORTH').to('WEST'))
+        expect { service.execute('LEFT') }.to(change(robot, :face).from('WEST').to('SOUTH'))
+        expect { service.execute('LEFT') }.to(change(robot, :face).from('SOUTH').to('EAST'))
       end
+    end
+
+    context 'when the command is RIGHT' do
+      before do
+        service.execute('PLACE 0,0,NORTH')
+      end
+
+      it 'changes the robot\'s direction to the right' do
+        expect { service.execute('RIGHT') }.to(change(robot, :face).from('NORTH').to('EAST'))
+        expect { service.execute('RIGHT') }.to(change(robot, :face).from('EAST').to('SOUTH'))
+        expect { service.execute('RIGHT') }.to(change(robot, :face).from('SOUTH').to('WEST'))
+      end
+    end
+
+    context 'when the command is RESET' do
+      before do
+        service.execute('PLACE 0,0,NORTH')
+      end
+
+      it { expect { service.execute('RESET') }.to(change(robot, :placed).from(true).to(false)) }
     end
   end
 end

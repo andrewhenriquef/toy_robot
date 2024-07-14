@@ -13,6 +13,7 @@ class RobotCommandService
     when 'LEFT' then @robot.turn_left
     when 'RIGHT' then @robot.turn_right
     when 'REPORT' then @robot.report
+    when 'RESET' then @robot.placed = false
     when /PLACE (\d),(\d),(.+)/
       @robot.place(
         axis_x: Regexp.last_match(1).to_i,
