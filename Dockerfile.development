@@ -1,0 +1,26 @@
+FROM ruby:3.3.3
+
+ARG API_PATH=/toy_robot
+ARG PORT=3000
+ARG PACKAGES="build-essential libpq-dev nodejs nano sqlite3"
+
+ENV API_PATH=${API_PATH}
+ENV PORT=${PORT}
+ENV PACKAGES=${PACKAGES}
+
+RUN apt-get update -qq && apt-get install -y $PACKAGES
+
+RUN mkdir $API_PATH
+WORKDIR $API_PATH
+ADD . $API_PATH
+
+RUN gem install bundler
+RUN bundle update net-pop
+RUN bundle install
+
+EXPOSE $PORT
+
+ENTRYPOINT ["sh", "./entrypoint.sh"]
+
+CMD ["rails", "server", "-b", "0.0.0.0"]
+
