@@ -65,7 +65,3 @@ docker compose run -it app bin/cli -f spec/fixtures/sample_c
 ### Current Integrations
 
 - This application integrates a web app with the CLI. It uses Turbo from Hotwire to synchronize commands directly between the CLI and the web app in both directions.
-
-### Future Improvements
-- Introduce multiple "tabletops" and robots to allow gameplay on the same or different surfaces.
-- Create a friendly interface
